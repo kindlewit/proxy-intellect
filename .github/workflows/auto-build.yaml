@@ -37,6 +37,5 @@ jobs:
         run: rm -rf ./scripts ./github .babelrc .prettierrc
       - name: Push to branch <build>
         run: |
-          git add .
-          git commit -m "Automated build"
+          git commit -am "Automated build"
           git push origin build
