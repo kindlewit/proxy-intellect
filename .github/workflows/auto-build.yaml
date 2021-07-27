@@ -21,15 +21,21 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install Package Dependencies
-        run: npm i
-      - name: Building project
-        run: npm run build
-      - name: Push to branch <build>
+      - name: Config Git
         env:
           GH_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
         run: |
           git config user.name 'datmemerboi'
-          git config user.email 'onrailsin@users.noreply.github.com'
-          git commit -am "Automated build"
+          git config user.email 'datmemerboi@users.noreply.github.com'
+          git checkout -b build
+      - name: Install Package Dependencies
+        run: npm i
+      - name: Building project
+        run: npm run build
+      - name: Remove extraneous files
+        run: rm -rf ./scripts ./github .babelrc .prettierrc
+      - name: Push to branch <build>
+        run: |
+          git add .
+          git commit -m "Automated build"
           git push origin build
