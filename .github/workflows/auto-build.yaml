@@ -28,6 +28,7 @@ jobs:
           git config user.name 'datmemerboi'
           git config user.email 'datmemerboi@users.noreply.github.com'
           git checkout -b build
+          git pull origin build
       - name: Install Package Dependencies
         run: npm i
       - name: Building project
