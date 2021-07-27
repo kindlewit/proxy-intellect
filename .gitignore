@@ -11,4 +11,3 @@ package-lock.json
 # Misc files & folders
 request sample.json
 README.md
-handlers/*
