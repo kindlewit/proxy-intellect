@@ -29,6 +29,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
         run: |
+          git config user.name 'datmemerboi'
+          git config user.email 'onrailsin@users.noreply.github.com'
           git commit -am "Automated build"
-          git remote set-url origin https://datmemerboi:$GH_TOKEN@github.com/kindlewit/proxy-intellect
           git push origin build
