@@ -12,10 +12,13 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x]
+    env:
+      token: ${{ secrets.GH_REPO_TOKEN }}
+
     steps:
       - uses: actions/checkout@master
         with:
-          token: ${{ secrets.GH_REPO_TOKEN }}
+          token: ${{ env.token }}
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
