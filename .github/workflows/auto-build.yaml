@@ -33,11 +33,11 @@ jobs:
       - name: Building project
         run: npm run build
       - name: List files & folders
-        run: ll ./
+        run: dir
       - name: Remove extraneous files
         run: rm -rf scripts/ .github/workflows/auto-build.yaml .babelrc .prettierrc unnecessary.txt
       - name: List files & folders again
-        run: ll ./
+        run: dir
       - name: Push to branch <build>
         run: |
           git commit -am "Automated build at $(date +%s)"
