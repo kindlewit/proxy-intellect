@@ -32,8 +32,12 @@ jobs:
         run: npm i
       - name: Building project
         run: npm run build
+      - name: List files & folders
+        run: ll ./
       - name: Remove extraneous files
-        run: rm -rf ./scripts ./github/workflows/auto-build.yaml .babelrc .prettierrc unnecessary.txt
+        run: rm -rf scripts/ .github/workflows/auto-build.yaml .babelrc .prettierrc unnecessary.txt
+      - name: List files & folders again
+        run: ll ./
       - name: Push to branch <build>
         run: |
           git commit -am "Automated build at $(date +%s)"
