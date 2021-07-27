@@ -1,0 +1,1 @@
+'use strict';const _=require("lodash"),wordlist=["electrobath","electrobiology","aardwolves","paprica","papua","papulae","solanidin","zunyite","zurich","zwitter"];function generateMWords(a=3,b=""){let c=_.sampleSize(wordlist,a);for(;_.uniq(c).length<a-1;)c=_.sampleSize(wordlist,a);return _.map(c,_.capitalize).join(b)}module.exports={generateMWords};
