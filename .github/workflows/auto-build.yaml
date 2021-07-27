@@ -34,8 +34,8 @@ jobs:
       - name: Building project
         run: npm run build
       - name: Remove extraneous files
-        run: rm -rf ./scripts ./github .babelrc .prettierrc
+        run: rm -rf ./scripts ./github/workflows/auto-build.yaml .babelrc .prettierrc unnecessary.txt
       - name: Push to branch <build>
         run: |
           git commit -am "Automated build"
-          git push origin build
+          git push -f origin build
