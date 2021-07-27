@@ -36,5 +36,5 @@ jobs:
         run: rm -rf ./scripts ./github/workflows/auto-build.yaml .babelrc .prettierrc unnecessary.txt
       - name: Push to branch <build>
         run: |
-          git commit -am "Automated build"
+          git commit -am "Automated build at $(date +%s)"
           git push -f origin build
