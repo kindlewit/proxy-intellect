@@ -28,4 +28,7 @@ jobs:
       - name: Push to branch <build>
         run: |
           git commit -am "Automated build"
+          git remote \
+          set-url --push origin \
+          https://datmemerboi:$GH_REPO_TOKEN@github.com/kindlewit/proxy-intellect
           git push
