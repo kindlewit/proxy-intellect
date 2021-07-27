@@ -1,0 +1,14 @@
+# package directories
+node_modules
+jspm_packages
+
+# Serverless directories
+.serverless
+
+# Package file
+package-lock.json
+
+# Misc files & folders
+request sample.json
+README.md
+handlers/*

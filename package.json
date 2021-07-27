@@ -1,0 +1,22 @@
+{
+  "name": "proxy-intellect",
+  "version": "1.0.0",
+  "description": "A condensed proxy for esoteric-cerebrum",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx babel scripts --out-dir handlers --copy-files",
+    "build:watch": "npx babel scripts --out-dir handlers --copy-files --watch"
+  },
+  "author": "datmemerboi",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "serverless": "^2.52.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.14.8",
+    "@babel/preset-env": "^7.14.8",
+    "babel-preset-minify": "^0.5.1"
+  }
+}
