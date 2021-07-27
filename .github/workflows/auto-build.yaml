@@ -1,0 +1,30 @@
+name: auto-build
+
+on:
+  push:
+    branches:
+      - main
+      # Any push to branch <main> triggers this workflow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - uses: actions/checkout@master
+        with:
+          token: ${{ secrets.GH_REPO_TOKEN }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install Package Dependencies
+        run: npm i
+      - name: Building project
+        run: npm run build
+      - name: Push to branch <build>
+        run: |
+        git commit -am "Automated build"
+        git push
