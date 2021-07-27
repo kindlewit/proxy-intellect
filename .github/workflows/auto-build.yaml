@@ -13,11 +13,10 @@ jobs:
       matrix:
         node-version: [12.x]
     environment: Prod
-
     steps:
       - uses: actions/checkout@master
         with:
-          token: ${{ environment.GH_REPO_TOKEN }}
+          token: ${{ secrets.GH_REPO_TOKEN }}
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
