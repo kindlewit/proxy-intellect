@@ -40,5 +40,6 @@ jobs:
         run: dir
       - name: Push to branch <build>
         run: |
-          git commit -am "Automated build at $(date +%s)"
+          git add handlers
+          git commit -m "Automated build at $(date +%s)"
           git push -f origin build
