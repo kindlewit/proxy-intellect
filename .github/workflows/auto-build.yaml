@@ -26,5 +26,5 @@ jobs:
         run: npm run build
       - name: Push to branch <build>
         run: |
-        git commit -am "Automated build"
+        git commit -am "Automated build" && \
         git push
