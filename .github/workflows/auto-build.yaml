@@ -32,11 +32,9 @@ jobs:
         run: npm i
       - name: Building project
         run: npm run build
-      - name: List files & folders
-        run: dir
       - name: Remove extraneous files
         run: rm -rf scripts/ .github/workflows/auto-build.yaml .babelrc .prettierrc unnecessary.txt
-      - name: List files & folders again
+      - name: List files & folders
         run: dir
       - name: Push to branch <build>
         run: |
