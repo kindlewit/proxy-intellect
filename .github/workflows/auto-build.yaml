@@ -26,9 +26,9 @@ jobs:
       - name: Building project
         run: npm run build
       - name: Push to branch <build>
+        env:
+          GH_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
         run: |
           git commit -am "Automated build"
-          git remote \
-          set-url --push origin \
-          https://datmemerboi:$GH_REPO_TOKEN@github.com/kindlewit/proxy-intellect
+          git remote set-url --push origin https://datmemerboi:$GH_TOKEN@github.com/kindlewit/proxy-intellect
           git push
