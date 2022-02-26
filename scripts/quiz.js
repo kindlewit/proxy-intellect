@@ -1,9 +1,20 @@
 'use strict';
 
-const _ = require('lodash');
+const {
+  now,
+  omit,
+  cloneDeep,
+  merge,
+  has,
+  chain,
+  find,
+  isNil,
+  isString,
+  isEmpty
+} = require('lodash');
 
 const { generateMWords } = require('./util');
-const DATA = require('./quiz-data.json');
+const DATA = require('./data/quiz-data.json');
 
 const IDEAL_DOC = {
   three_words: null,
@@ -16,22 +27,22 @@ const IDEAL_DOC = {
   file_upload: true,
   status: 0,
   username: null,
-  created_at: _.now(),
-  updated_at: _.now()
+  created_at: now(),
+  updated_at: now()
 };
 
 function sanitize(doc) {
-  let cleanObj = _.cloneDeep(doc);
+  let cleanObj = cloneDeep(doc);
   for (let key in doc) {
-    if (_.isNil(doc[key]) || key === 'created_at' || key === 'three_words') {
+    if (isNil(doc[key]) || key === 'created_at' || key === 'three_words') {
       // Cannot insert user-defined created_at / three_words
-      _.omit(cleanObj, key);
+      omit(cleanObj, key);
     }
   }
-  if (!_.isNil(doc.duration) && _.isString(doc.duration)) {
+  if (!isNil(doc.duration) && isString(doc.duration)) {
     cleanObj.duration = parseInt(doc.duration);
   }
-  if (!_.isNil(doc.topics) && _.isString(doc.topics)) {
+  if (!isNil(doc.topics) && isString(doc.topics)) {
     cleanObj.topics = doc.topics.split(',');
   }
   return cleanObj;
@@ -39,7 +50,7 @@ function sanitize(doc) {
 
 function createQuizHandler(event) {
   try {
-    let doc = _.merge(IDEAL_DOC, sanitize(event.body));
+    let doc = merge(IDEAL_DOC, sanitize(event.body));
     doc.three_words = generateMWords(3, '-');
     return {
       statusCode: 201,
@@ -52,12 +63,12 @@ function createQuizHandler(event) {
 
 function listQuizHandler(event) {
   try {
-    let limit = _.has(event?.queryStringParameters, 'limit')
+    let limit = has(event?.queryStringParameters, 'limit')
       ? parseInt(event.queryStringParameters.limit)
       : DATA.length;
-    let docs = _.chain(DATA)
+    let docs = chain(DATA)
       .sampleSize(limit)
-      .map((o) => _.omit(o, ['questions', 'responses']))
+      .map((o) => omit(o, ['questions', 'responses']))
       .value();
     return {
       statusCode: 200,
@@ -73,17 +84,15 @@ function listQuizHandler(event) {
 
 function getQuizHandler(event) {
   try {
-    let doc = _.find(DATA, {
+    let doc = find(DATA, {
       three_words: event.pathParameters.threeWords
     });
-    if (_.isEmpty(doc)) {
+    if (isEmpty(doc)) {
       return { statusCode: 404 };
     }
     return {
       statusCode: 200,
-      body: JSON.stringify(
-        _.omit(doc, ['questions', 'responses'])
-      )
+      body: JSON.stringify(omit(doc, ['questions', 'responses']))
     };
   } catch (e) {
     return { statusCode: 500 };
@@ -92,42 +101,42 @@ function getQuizHandler(event) {
 
 function updateQuizHandler(event) {
   try {
-    let doc = _.find(DATA, {
+    let doc = find(DATA, {
       three_words: event.pathParameters.threeWords
     });
-    if (_.isEmpty(doc)) {
+    if (isEmpty(doc)) {
       return { statusCode: 404 };
     }
     return {
       statusCode: 200,
-      body: JSON.stringify(_.merge(doc, sanitize(event.body)))
+      body: JSON.stringify(merge(doc, sanitize(event.body)))
     };
   } catch (e) {
     return { statusCode: 500 };
   }
 }
 
-function deleteQuizHandler(event) {
+function deleteQuizHandler() {
   return { statusCode: 204 };
 }
 
 function collateQuizHandler(event) {
-  let doc = _.chain(DATA)
+  let doc = chain(DATA)
     .find({
       three_words: event.pathParameters.threeWords
     })
     .omit('responses')
     .value();
   doc.questions = doc.questions.map((qn) => {
-    return _.omit(qn, 'answers');
+    return omit(qn, 'answers');
   });
-  if (_.isEmpty(doc)) {
+  if (isEmpty(doc)) {
     return { statusCode: 404 };
   }
   return {
     statusCode: 200,
     body: JSON.stringify(doc)
-  }
+  };
 }
 
 function evaluateQuizHandler(event) {
@@ -136,25 +145,25 @@ function evaluateQuizHandler(event) {
   let { threeWords } = event.pathParameters;
   switch (method) {
     case 'GET': {
-      let doc = _.find(DATA, {
+      let doc = find(DATA, {
         three_words: threeWords
       });
-      if (_.isEmpty(doc)) {
+      if (isEmpty(doc)) {
         return { statusCode: 404 };
       }
       return {
         statusCode: 200,
         body: JSON.stringify(doc)
-      }
+      };
     }
     case 'POST': {
       return {
         statusCode: 201,
         body: JSON.stringify(event.body)
-      }
+      };
     }
     case 'PUT': {
-      return { statusCode: 200 }
+      return { statusCode: 200 };
     }
     default: {
       break;

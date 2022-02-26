@@ -1,6 +1,17 @@
 'use strict';
 
-const _ = require('lodash');
+const {
+  now,
+  omit,
+  cloneDeep,
+  merge,
+  has,
+  find,
+  isNil,
+  isString,
+  isEmpty,
+  sampleSize
+} = require('lodash');
 
 const DATA = [
   {
@@ -24,21 +35,21 @@ const IDEAL_DOC = {
   email: null,
   display_name: null,
   attended: [],
-  created_at: _.now(),
-  updated_at: _.now()
+  created_at: now(),
+  updated_at: now()
 };
 
 function sanitize(doc) {
-  let cleanObj = _.cloneDeep(doc);
+  let cleanObj = cloneDeep(doc);
   for (let key in doc) {
-    if (_.isNil(doc[key]) || key === 'created_at') {
-      _.omit(cleanObj, key);
+    if (isNil(doc[key]) || key === 'created_at') {
+      omit(cleanObj, key);
     }
   }
-  if (!_.isNil(doc.duration)) {
+  if (!isNil(doc.duration)) {
     cleanObj.duration = parseInt(doc.duration);
   }
-  if (!_.isNil(doc.attended) && _.isString(doc.attended)) {
+  if (!isNil(doc.attended) && isString(doc.attended)) {
     cleanObj.attended = doc.attended.split(',');
   }
   return cleanObj;
@@ -46,7 +57,7 @@ function sanitize(doc) {
 
 function createUserHandler(event) {
   try {
-    let doc = _.merge(IDEAL_DOC, sanitize(_.omit(event.body, 'password')));
+    let doc = merge(IDEAL_DOC, sanitize(omit(event.body, 'password')));
     return {
       statusCode: 201,
       body: JSON.stringify(doc)
@@ -58,14 +69,14 @@ function createUserHandler(event) {
 
 function listUserHandler(event) {
   try {
-    let limit = _.has(event?.queryStringParameters, 'limit')
+    let limit = has(event?.queryStringParameters, 'limit')
       ? parseInt(event.queryStringParameters.limit)
       : DATA.length;
     return {
       statusCode: 200,
       body: JSON.stringify({
         total_docs: DATA.length,
-        docs: _.sampleSize(DATA, limit)
+        docs: sampleSize(DATA, limit)
       })
     };
   } catch (e) {
@@ -75,10 +86,10 @@ function listUserHandler(event) {
 
 function getUserHandler(event) {
   try {
-    let doc = _.find(DATA, {
+    let doc = find(DATA, {
       username: event.pathParameters.username
     });
-    if (_.isEmpty(doc)) {
+    if (isEmpty(doc)) {
       return { statusCode: 404 };
     }
     return {
@@ -92,22 +103,22 @@ function getUserHandler(event) {
 
 function updateUserHandler(event) {
   try {
-    let doc = _.find(DATA, {
+    let doc = find(DATA, {
       username: event.pathParameters.username
     });
-    if (_.isEmpty(doc)) {
+    if (isEmpty(doc)) {
       return { statusCode: 404 };
     }
     return {
       statusCode: 200,
-      body: JSON.stringify(_.merge(doc, sanitize(event.body)))
+      body: JSON.stringify(merge(doc, sanitize(event.body)))
     };
   } catch (e) {
     return { statusCode: 500 };
   }
 }
 
-function deleteUserHandler(event) {
+function deleteUserHandler() {
   return { statusCode: 204 };
 }
 module.exports = {
