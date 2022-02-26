@@ -1,12 +1,12 @@
 {
   "name": "proxy-intellect",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A condensed proxy for esoteric-cerebrum",
   "main": "index.js",
   "scripts": {
-    "build": "npx babel scripts --out-dir handlers --copy-files",
-    "build:watch": "npx babel scripts --out-dir handlers --copy-files --watch",
-    "deploy": "npx serverless deploy"
+    "build": "babel scripts --out-dir handlers --copy-files",
+    "build:watch": "babel scripts --out-dir handlers --copy-files --watch",
+    "deploy": "serverless deploy"
   },
   "author": "datmemerboi",
   "license": "ISC",
