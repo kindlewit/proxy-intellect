@@ -1,0 +1,54 @@
+name: automated-build-deploy
+
+on:
+  # push:
+    # branches:
+      # - main # Any push to branch <main> triggers this workflow
+
+jobs:
+  build-job:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - uses: actions/checkout@master
+      - name: Using Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install Package Dependencies
+        run: npm i
+      - name: Building project
+        run: npm run build
+      - name: Remove extraneous files
+        run: |
+          rm -rf scripts/ .github/workflows/auto-build.yaml .babelrc .prettierrc unnecessary.txt
+      - name: List files & folders
+        run: dir
+
+  deploy-job:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    environment: Prod
+    steps:
+      - uses: actions/checkout@master
+      - name: Using Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Remove Old Package Dependencies
+        run: rm -rf node_modules/ package-lock.json
+      - name: Install Package Dependencies
+        run: npm i --production
+      - name: Serverless Deploy
+        run: npm run deploy
