@@ -10,25 +10,73 @@ provider:
 functions:
   createSampleUser:
     handler: handlers.createUserHandler
+    events:
+      - http:
+          path: user
+          method: post
   listSampleUser:
     handler: handlers.listUserHandler
+    events:
+      - http:
+          path: user
+          method: get
   getSampleUser:
     handler: handlers.getUserHandler
+    events:
+      - http:
+          path: user/{username}
+          method: get
   updateSampleUser:
     handler: handlers.updateUserHandler
+    events:
+      - http:
+          path: user/{username}
+          method: patch
   deleteSampleUser:
     handler: handlers.deleteUserHandler
+    events:
+      - http:
+          path: user/{username}
+          method: delete
   createSampleQuiz:
     handler: handlers.createQuizHandler
+    events:
+      - http:
+          path: quiz
+          method: post
   listSampleQuiz:
     handler: handlers.listQuizHandler
+    events:
+      - http:
+          path: quiz
+          method: get
   getSampleQuiz:
     handler: handlers.getQuizHandler
+    events:
+      - http:
+          path: quiz/{threeWords}
+          method: get
   updateSampleQuiz:
     handler: handlers.updateQuizHandler
+    events:
+      - http:
+          path: quiz/{threeWords}
+          method: patch
   deleteSampleQuiz:
     handler: handlers.deleteQuizHandler
+    events:
+      - http:
+          path: quiz/{threewords}
+          method: delete
   collateSampleQuiz:
     handler: handlers.collateQuizHandler
+    events:
+      - http:
+          path: quiz/{threeWords}/_collate
+          method: get
   evaluateSampleQuiz:
     handler: handlers.evaluateQuizHandler
+    events:
+      - http:
+          path: quiz/{threeWords}/_evaluate
+          method: [get, post, patch]
